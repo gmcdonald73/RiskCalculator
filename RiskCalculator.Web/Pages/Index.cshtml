@@ -1,0 +1,346 @@
+﻿@page
+@model RiskCalculatorModel
+
+<div class="row">
+
+    <!-- Input Form -->
+    <div class="col-md-6">
+
+        <form method="post">
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Account Size
+
+                    <i class="bi bi-info-circle tooltip-icon"
+                       data-bs-toggle="tooltip"
+                       title="Total trading capital available in the account">
+                    </i>
+                </label>
+
+                <input asp-for="Input.AccountSize" class="form-control" />
+
+                <span asp-validation-for="Input.AccountSize"
+                      class="text-danger">
+                </span>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Risk %
+                    <i class="bi bi-info-circle tooltip-icon"
+                           data-bs-toggle="tooltip"
+                           title="Percentage of account to risk on the trade. Typical traders risk between 0.5% and 2% per trade">
+                    </i>
+                </label>
+                <input asp-for="Input.RiskPercent" class="form-control" />
+
+                <span asp-validation-for="Input.RiskPercent"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Entry Price
+
+                    <i class="bi bi-info-circle tooltip-icon"
+                       data-bs-toggle="tooltip"
+                       title="Planned price to enter the trade">
+                    </i>
+                </label>
+
+                <input asp-for="Input.EntryPrice" class="form-control" />
+
+                <span asp-validation-for="Input.EntryPrice"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Stop Price
+
+                    <i class="bi bi-info-circle tooltip-icon"
+                       data-bs-toggle="tooltip"
+                       title="Price where the trade will be exited to limit losses">
+                    </i>
+                </label>
+
+                <input asp-for="Input.StopPrice" class="form-control" />
+
+                <span asp-validation-for="Input.StopPrice"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Target Price
+
+                    <i class="bi bi-info-circle tooltip-icon"
+                       data-bs-toggle="tooltip"
+                       title="Expected exit price for taking profit">
+                    </i>
+                </label>
+
+                <input asp-for="Input.TargetPrice" class="form-control" />
+
+                <span asp-validation-for="Input.TargetPrice"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Brokerage
+
+                    <i class="bi bi-info-circle tooltip-icon"
+                       data-bs-toggle="tooltip"
+                       title="Estimated brokerage or trading fees when buying or selling">
+                    </i>
+                </label>
+
+                <input asp-for="Input.Brokerage" class="form-control" />
+
+                <span asp-validation-for="Input.Brokerage"
+                      class="text-danger">
+                </span>
+            </div>
+            <button class="btn btn-primary">
+                Calculate
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- Results -->
+    <div class="col-md-6">
+
+        @if (Model.Result != null)
+        {
+            <div class="card">
+                <div class="card-body">
+
+                    <h5 class="card-title">Results</h5>
+
+                    <table class="table">
+
+                        <tr>
+                            <td>
+                                Position Size
+                                <i class="bi bi-info-circle tooltip-icon"
+                                       data-bs-toggle="tooltip"
+                                       title="Number of units, shares, or coins to purchase">
+                                </i>
+                            </td>
+
+                            <td class="text-end @Model.PositionSizeCssClass">
+                                @Model.Result.PositionSize.ToString("N4")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Cost
+                                <i class="bi bi-info-circle tooltip-icon"
+                                       data-bs-toggle="tooltip"
+                                       title="Total cost of entering the trade including brokerage">
+                                </i>
+                            </td>
+
+                            <td class="text-end @Model.CostCssClass">
+                                @Model.Result.Cost.ToString("C")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Capital Allocation Percent
+                                <i class="bi bi-info-circle tooltip-icon"
+                                       data-bs-toggle="tooltip"
+                                       title="Percentage of total account capital allocated to this trade">
+                                </i>
+                            </td>
+
+                            <td class="text-end @Model.CapAllocPercentCssClass">
+                                @Model.Result.CapAllocPercent.ToString("P2")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Stop loss sale value
+                                <i class="bi bi-info-circle tooltip-icon"
+                                       data-bs-toggle="tooltip"
+                                       title="Estimated sale value if the stop price is triggered, minus brokerage">
+                                </i>
+                            </td>
+
+                            <td class="text-end @Model.SaleAmountIfStopHitCssClass">
+                                @Model.Result.SaleAmountIfStopHit.ToString("C")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Risk
+                                <i class="bi bi-info-circle tooltip-icon"
+                                       data-bs-toggle="tooltip"
+                                       title="Estimated dollar loss if stopped out of the trade">
+                                </i>
+                            </td>
+
+                            <td class="text-end @Model.LossIfStopHitCssClass">
+                                @Model.Result.LossIfStopHit.ToString("C")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Target sale value
+                                <i class="bi bi-info-circle tooltip-icon"
+                                       data-bs-toggle="tooltip"
+                                       title="Estimated sale value if the target price is reached, minus brokerage">
+                                </i>
+                            </td>
+
+                            <td class="text-end @Model.SaleAmountIfTargetHitCssClass">
+                                @Model.Result.SaleAmountIfTargetHit.ToString("C")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Reward
+                                <i class="bi bi-info-circle tooltip-icon"
+                                       data-bs-toggle="tooltip"
+                                       title="Estimated dollar profit if the target price is reached">
+                                </i>
+                            </td>
+
+                            <td class="text-end @Model.GainIfTargetHitCssClass">
+                                @Model.Result.GainIfTargetHit.ToString("C")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Reward / Risk
+                                <i class="bi bi-info-circle tooltip-icon"
+                                       data-bs-toggle="tooltip"
+                                       title="Ratio of potential reward compared to potential risk">
+                                </i>
+                            </td>
+
+                            <td class="text-end @Model.RiskRewardCssClass">
+                                @Model.Result.RiskReward.ToString("0.##")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Break even strike rate
+                                <i class="bi bi-info-circle tooltip-icon"
+                                       data-bs-toggle="tooltip"
+                                       title="Win rate required to break even over time">
+                                </i>
+                            </td>
+
+                            <td class="text-end @Model.BreakEvenStrikeRateCssClass">
+                                @Model.Result.BreakEvenStrikeRate.ToString("P2")
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Kelly criterion strike rate
+                                <i class="bi bi-info-circle tooltip-icon"
+                                   data-bs-toggle="tooltip"
+                                   title="The minimum win rate required to justify the selected risk percent given the reward-to-risk ratio">
+                                </i>
+                            </td>
+
+                            <td class="text-end @Model.KellyCriterionStrikeRateCssClass">
+                                @Model.Result.KellyCriterionStrikeRate.ToString("P2")
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+<hr class="mt-5" />
+
+
+<!-- Recent Calculations -->
+@if (Model.Recent.Any())
+{
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h5 class="mb-3">Recent Calculations</h5>
+
+    <table class="table table-striped">
+
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Account</th>
+                <th>Risk %</th>
+                <th>Risk $</th>
+                <th>Entry</th>
+                <th>Stop</th>
+                <th>Target</th>
+                <th>Brokerage</th>
+                <th>Size</th>
+                <th>Cost</th>
+                <th>Cap Alloc %</th>
+                <th>Reward</th>
+                <th>Reward / Risk</th>
+                <th>Break even S/R</th>
+                <th>Kelly S/R</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var calc in Model.Recent)
+            {
+                <tr>
+                    <td class="text-end">@calc.Timestamp.ToShortTimeString()</td>
+                    <td class="text-end">@calc.AccountSize.ToString("C")</td>
+                    <td class="text-end">@calc.RiskPercent.ToString("0.##")</td>
+                    <td class="text-end">@calc.RiskAmount.ToString("C")</td>
+                    <td class="text-end">@calc.EntryPrice.ToString("C")</td>
+                    <td class="text-end">@calc.StopPrice.ToString("C")</td>
+                    <td class="text-end">@calc.TargetPrice.ToString("C")</td>
+                    <td class="text-end">@calc.Brokerage.ToString("C")</td>
+                    <td class="text-end">@calc.PositionSize.ToString("N4")</td>
+                    <td class="text-end">@calc.Cost.ToString("C")</td>
+                    <td class="text-end">@calc.CapAllocPercent.ToString("P2")</td>
+                    <td class="text-end">@calc.GainIfTargetHit.ToString("C")</td>
+                    <td class="text-end">@calc.RiskReward.ToString("0.##")</td>
+                    <td class="text-end">@calc.BreakEvenStrikeRate.ToString("P2")</td>
+                    <td class="text-end">@calc.KellyCriterionStrikeRate.ToString("P2")</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
