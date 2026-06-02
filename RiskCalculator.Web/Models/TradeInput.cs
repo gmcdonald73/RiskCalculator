@@ -2,7 +2,7 @@
 
 namespace RiskCalculator.Web.Models
 {
-    public class TradeInput
+    public class TradeInput : IValidatableObject
     {
         [Display(Name = "Account Size")]
         [Range(1, double.MaxValue, ErrorMessage = "{0} must be be at least {1}")]
@@ -17,7 +17,7 @@ namespace RiskCalculator.Web.Models
         public decimal EntryPrice { get; set; }
 
         [Display(Name = "Stop Price")]
-        [Range(0.0001, double.MaxValue, ErrorMessage = "{0} must be be at least {1}")]
+        [Range(0, double.MaxValue, ErrorMessage = "{0} cannot be negative")]
         public decimal StopPrice { get; set; }
 
         [Display(Name = "Target Price")]
@@ -27,5 +27,22 @@ namespace RiskCalculator.Web.Models
         [Display(Name = "Brokerage")]
         [Range(0, double.MaxValue, ErrorMessage = "{0} cannot be negative")]
         public decimal Brokerage { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (!(StopPrice < EntryPrice))
+            {
+                yield return new ValidationResult(
+                    "Stop Price must be less than Entry Price.",
+                    new[] { nameof(StopPrice) });
+            }
+
+            if (!(EntryPrice < TargetPrice))
+            {
+                yield return new ValidationResult(
+                    "Target Price must be greater than Entry Price.",
+                    new[] { nameof(TargetPrice) });
+            }
+        }
     }
 }

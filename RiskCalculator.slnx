@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="RiskCalculator.Tests/RiskCalculator.Tests.csproj" Id="7fdb2799-d2c6-46de-bc0c-fef5729a1ba9" />
   <Project Path="RiskCalculator.Web/RiskCalculator.Web.csproj" />
 </Solution>
