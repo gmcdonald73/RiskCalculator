@@ -283,7 +283,7 @@
 
 
 <!-- Recent Calculations -->
-@if (Model.Recent.Any())
+@if (Model.RecentCalculations.Any())
 {
 <div class="card shadow-sm">
     <div class="card-body">
@@ -313,7 +313,7 @@
         </thead>
 
         <tbody>
-            @foreach (var calc in Model.Recent)
+            @foreach (var calc in Model.RecentCalculations)
             {
                 <tr>
                     <td class="text-end">@calc.Timestamp.ToShortTimeString()</td>

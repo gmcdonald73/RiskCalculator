@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using RiskCalculator.Web.Models;
 using RiskCalculator.Web.Services;
 using System.ComponentModel.DataAnnotations;
+using RiskCalculator.Web.Extensions;
 
 namespace RiskCalculator.Web.Pages
 {
@@ -155,8 +156,7 @@ namespace RiskCalculator.Web.Pages
             }
         }
 
-        public static List<CalculationRecord> RecentCalculations = new List<CalculationRecord>();
-        public List<CalculationRecord> Recent => RecentCalculations;
+        public List<CalculationRecord> RecentCalculations { get; set; } = new();
 
         private readonly ILogger<RiskCalculatorModel> _logger;
 
@@ -171,6 +171,8 @@ namespace RiskCalculator.Web.Pages
 
         public void OnGet()
         {
+            RecentCalculations = LoadRecentCalculations();
+
             Input = new TradeInput
             {
                 AccountSize = 10000,
@@ -184,7 +186,9 @@ namespace RiskCalculator.Web.Pages
 
         public void OnPost()
         {
-            if(!ModelState.IsValid)
+            RecentCalculations = LoadRecentCalculations();
+
+            if (!ModelState.IsValid)
                 return;
 
             Result = _calculator.Calculate(
@@ -221,6 +225,16 @@ namespace RiskCalculator.Web.Pages
             {
                 RecentCalculations.RemoveAt(5);
             }
+
+            HttpContext.Session.SetObject(
+                "RecentCalculations",
+                RecentCalculations);
+        }
+
+        private List<CalculationRecord> LoadRecentCalculations()
+        {
+            return HttpContext.Session.GetObject<List<CalculationRecord>>("RecentCalculations")
+                ?? new List<CalculationRecord>();
         }
     }
 }
