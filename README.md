@@ -35,7 +35,7 @@ Here are the results of running a calculation. The last five calculations are al
 
 ![Calculation example](docs/images/screenshot-calculation.png)
 
-If a calculation produces results that outside of defined ranges then warnings are shown in yellow (e.g. Reward / Risk < 2) and errors in red (e.g. Cost > Account Size)
+If a calculation produces results that are outside of defined ranges then warnings are shown in yellow (e.g. Reward / Risk < 2) and errors in red (e.g. Cost > Account Size)
 
 ![Warnings example](docs/images/screenshot-warnings.png)
 
